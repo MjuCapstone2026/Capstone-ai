@@ -4,7 +4,7 @@ from typing import Optional
 
 class Settings(BaseSettings):
     # --- OpenAI & LangChain ---
-    OPENAI_API_KEY: str
+    GOOGLE_API_KEY: str
     LANGCHAIN_TRACING_V2: str   
     LANGCHAIN_ENDPOINT: str  
     LANGCHAIN_API_KEY: str
