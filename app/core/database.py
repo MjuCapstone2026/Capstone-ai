@@ -2,12 +2,13 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base
 from app.core.config import settings
+from sqlalchemy.pool import NullPool
 
 # 1. 비동기 DB 엔진 생성
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=True,
-    pool_pre_ping=True,  # 연결이 끊겼는지 미리 확인 (Supabase 연결 안정성 상향)
+    poolclass=NullPool, 
     connect_args={
         "statement_cache_size": 0,       # 캐시 끄기
         "prepared_statement_cache_size": 0 # 캐시 끄기 (asyncpg 전용)
