@@ -1,0 +1,31 @@
+# Web Framework
+fastapi
+uvicorn[standard]
+
+# AI & LLM
+langchain
+langchain-openai
+langchain-community
+langsmith
+
+# Database & Cache (Async 지원)
+sqlalchemy
+asyncpg
+redis
+
+# Environmental Variables
+python-dotenv
+pydantic-settings
+
+# --- LLM & LangChain ---
+langchain-google-genai==2.0.10
+langchain-community==0.3.17
+langchain-core==0.3.37
+langchain-openai==0.3.6
+
+# --- Tools & Utilities ---
+google-generativeai==0.8.4
+
+# Testing
+pytest==8.3.4
+pytest-asyncio==0.25.3
