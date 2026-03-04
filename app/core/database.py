@@ -1,34 +1,43 @@
-# Database configuration placeholder
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy import create_engine, URL
 from sqlalchemy.orm import sessionmaker, declarative_base
 from app.core.config import settings
 from sqlalchemy.pool import NullPool
 
-# 1. 비동기 DB 엔진 생성
-engine = create_async_engine(
-    settings.DATABASE_URL,
+# 정보를 쪼개서 안전하게 URL 객체 생성
+connection_url = URL.create(
+    drivername="postgresql",
+    username=settings.DB_USER,
+    password=settings.DB_PASSWORD,
+    host=settings.DB_HOST,
+    port=settings.DB_PORT,
+    database=settings.DB_NAME,
+    query={"sslmode": "require"}
+)
+
+# 1. 동기 DB 엔진 생성
+engine = create_engine(
+    connection_url,
     echo=True,
-    poolclass=NullPool, 
+    poolclass=NullPool,
     connect_args={
-        "statement_cache_size": 0,       # 캐시 끄기
-        "prepared_statement_cache_size": 0 # 캐시 끄기 (asyncpg 전용)
+        "options": "-c search_path=public" 
     }
 )
 
-# 2. 비동기 세션 생성기 (자바의 EntityManagerFactory 역할)
-AsyncSessionLocal = sessionmaker(
-    bind=engine,
-    class_=AsyncSession,
-    expire_on_commit=False
+# 2. 동기 세션 생성기
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
 )
 
 # 3. 모델(Entity)의 베이스 클래스
 Base = declarative_base()
 
 # 4. 의존성 주입(Dependency Injection)을 위한 함수
-async def get_db():
-    async with AsyncSessionLocal() as session:
-        try:
-            yield session
-        finally:
-            await session.close()
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

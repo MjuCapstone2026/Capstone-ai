@@ -11,7 +11,12 @@ class Settings(BaseSettings):
     LANGCHAIN_PROJECT: str
 
     # --- Database & Redis ---
-    DATABASE_URL: str
+    DB_USER: str
+    DB_PASSWORD: str
+    DB_HOST: str
+    DB_PORT: int  # 포트는 숫자이므로 int로 설정
+    DB_NAME: str
+    
     REDIS_HOST: str
     REDIS_PASSWORD: str
     REDIS_PORT: int
